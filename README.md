@@ -14,6 +14,11 @@ example.
 
 `$ python3 -m grpc_tools.protoc -I ./proto --python_out=./test --pyi_out=./test --grpc_python_out=./test ./proto/helloworld.proto`
 
+## proto build
+
+`$ protoc -I ./googleapis -I ./proto --include_imports --include_source_info --descriptor_set_ou
+t=proto/helloworld.pb proto/helloworld.proto`
+
 ## grpcurl
 
 macos
