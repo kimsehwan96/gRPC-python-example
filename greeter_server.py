@@ -43,3 +43,5 @@ def serve():
 if __name__ == "__main__":
     logging.basicConfig()
     serve()
+
+# This server has server reflection enabled, which means that it can be queried
