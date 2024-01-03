@@ -46,3 +46,22 @@ helloworld.Greeter.SayHello
 4. 실행
 
 `$ grpcurl -plaintext localhost:50051 list helloworld.Greeter`
+
+## Health Check
+
+`grpc.health.v1.Health` 형태로 사전에 정의된 프로토버퍼 형태도 있고 응답도 있음.
+
+`python3 -m pip install grpcio-health-checking`
+
+`$ grpcurl -plaintext localhost:50051 grpc.health.v1.Health/Check`
+`$ grpcurl -plaintext localhost:50051 grpc.health.v1.Health/Watch`
+
+-> K8s 의 gRPC Health Check 는 이 엔드포인트를 바라보는건지 확인 필요함
+
+
+```
+~ ❯ grpcurl -plaintext localhost:50051 grpc.health.v1.Health/Check
+{
+  "status": "SERVING"
+}
+```

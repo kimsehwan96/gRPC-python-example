@@ -15,9 +15,14 @@
 
 from concurrent import futures
 import logging
+import threading
+from time import sleep
 
 import grpc
 from grpc_reflection.v1alpha import reflection
+from grpc_health.v1 import health
+from grpc_health.v1 import health_pb2
+from grpc_health.v1 import health_pb2_grpc
 import helloworld_pb2
 import helloworld_pb2_grpc
 
@@ -30,15 +35,44 @@ class Greeter(helloworld_pb2_grpc.GreeterServicer):
         return helloworld_pb2.HelloReply(message="Hello again, %s!" % request.name)
 
 
+def _toggle_health(health_servicer: health.HealthServicer, service: str):
+    # Health Check 요청 들어왔을 때, 서비스 상태를 번갈아가면서 응답
+    next_status = health_pb2.HealthCheckResponse.SERVING
+    while True:
+        if next_status == health_pb2.HealthCheckResponse.SERVING:
+            next_status = health_pb2.HealthCheckResponse.NOT_SERVING
+        else:
+            next_status = health_pb2.HealthCheckResponse.SERVING
+        
+        health_servicer.set(service, next_status)
+        sleep(5)
+        print(f"Set {service} to {next_status}")
+
+def _configure_heath_server(server: grpc.Server):
+    health_servicer = health.HealthServicer(
+        experimental_non_blocking=True,
+        experimental_thread_pool=futures.ThreadPoolExecutor(max_workers=10),
+    )
+    health_pb2_grpc.add_HealthServicer_to_server(health_servicer, server)
+    
+    toggle_health_status_thread = threading.Thread(
+        target=_toggle_health, args=(health_servicer, "helloworld.Greeter"),
+        daemon=True
+    )
+    toggle_health_status_thread.start()
+    
+
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     helloworld_pb2_grpc.add_GreeterServicer_to_server(Greeter(), server)
     SERVICE_NAMES = (
         helloworld_pb2.DESCRIPTOR.services_by_name["Greeter"].full_name,
         reflection.SERVICE_NAME,
+        health.SERVICE_NAME,
     )
-    reflection.enable_server_reflection(SERVICE_NAMES, server)
     server.add_insecure_port("[::]:50051")
+    _configure_heath_server(server)
+    reflection.enable_server_reflection(SERVICE_NAMES, server)
     server.start()
     server.wait_for_termination()
 
