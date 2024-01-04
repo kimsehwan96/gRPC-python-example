@@ -17,7 +17,7 @@ from concurrent import futures
 import logging
 import threading
 from time import sleep
-
+import os
 import grpc
 from grpc_reflection.v1alpha import reflection
 from grpc_health.v1 import health
@@ -26,6 +26,8 @@ from grpc_health.v1 import health_pb2_grpc
 import helloworld_pb2
 import helloworld_pb2_grpc
 
+
+SERVER_PORT = os.environ.get("SERVER_PORT", 7777)
 
 class Greeter(helloworld_pb2_grpc.GreeterServicer):
     def SayHello(self, request, context):
@@ -70,7 +72,7 @@ def serve():
         reflection.SERVICE_NAME,
         health.SERVICE_NAME,
     )
-    server.add_insecure_port("[::]:7777")
+    server.add_insecure_port(f"[::]:{SERVER_PORT}")
     _configure_heath_server(server)
     reflection.enable_server_reflection(SERVICE_NAMES, server)
     server.start()
