@@ -24,17 +24,17 @@ t=proto/helloworld.pb proto/helloworld.proto`
 macos
 `$ brew install grpcurl`
 
-`$ grpcurl -plaintext localhost:50051 list helloworld.Greeter`
+`$ grpcurl -plaintext localhost:7777 list helloworld.Greeter`
 
 ```
-~ ❯ grpcurl -plaintext localhost:50051 list helloworld.Greeter
+~ ❯ grpcurl -plaintext localhost:7777 list helloworld.Greeter
 helloworld.Greeter.SayHello
 ```
 
-`$ grpcurl -plaintext localhost:50051 helloworld.Greeter.SayHello`
+`$ grpcurl -plaintext localhost:7777 helloworld.Greeter.SayHello`
 
 ```
-~ ❯ grpcurl -plaintext -d '{"name": "hayden"}' localhost:50051 helloworld.Greeter.SayHello
+~ ❯ grpcurl -plaintext -d '{"name": "hayden"}' localhost:7777 helloworld.Greeter.SayHello
 {
   "message": "Hello, hayden!"
 }
@@ -50,7 +50,7 @@ helloworld.Greeter.SayHello
 
 4. 실행
 
-`$ grpcurl -plaintext localhost:50051 list helloworld.Greeter`
+`$ grpcurl -plaintext localhost:7777 list helloworld.Greeter`
 
 ## Health Check
 
@@ -58,14 +58,14 @@ helloworld.Greeter.SayHello
 
 `python3 -m pip install grpcio-health-checking`
 
-`$ grpcurl -plaintext localhost:50051 grpc.health.v1.Health/Check`
-`$ grpcurl -plaintext localhost:50051 grpc.health.v1.Health/Watch`
+`$ grpcurl -plaintext localhost:7777 grpc.health.v1.Health/Check`
+`$ grpcurl -plaintext localhost:7777 grpc.health.v1.Health/Watch`
 
 -> K8s 의 gRPC Health Check 는 이 엔드포인트를 바라보는건지 확인 필요함
 
 
 ```
-~ ❯ grpcurl -plaintext localhost:50051 grpc.health.v1.Health/Check
+~ ❯ grpcurl -plaintext localhost:7777 grpc.health.v1.Health/Check
 {
   "status": "SERVING"
 }

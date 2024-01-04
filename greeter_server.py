@@ -70,7 +70,7 @@ def serve():
         reflection.SERVICE_NAME,
         health.SERVICE_NAME,
     )
-    server.add_insecure_port("[::]:50051")
+    server.add_insecure_port("[::]:7777")
     _configure_heath_server(server)
     reflection.enable_server_reflection(SERVICE_NAMES, server)
     server.start()

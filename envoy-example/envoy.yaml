@@ -61,4 +61,4 @@ static_resources:
                       # Reference: https://docs.docker.com/docker-for-mac/release-notes/#docker-community-edition-18030-ce-mac59-2018-03-26
                       address: host.docker.internal
 #                      address: grpc-svc
-                      port_value: 50051
+                      port_value: 7777
