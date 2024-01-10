@@ -14,10 +14,17 @@ example.
 
 `$ python3 -m grpc_tools.protoc -I ./proto --python_out=./test --pyi_out=./test --grpc_python_out=./test ./proto/helloworld.proto`
 
-## proto build
+## proto build (make proto descriptor)
+
+### wtih protoc
 
 `$ protoc -I ./googleapis -I ./proto --include_imports --include_source_info --descriptor_set_ou
 t=proto/helloworld.pb proto/helloworld.proto`
+
+### with buf (recommended)
+
+`$ buf build ./proto -o proto/helloworld.proto`
+
 
 ## grpcurl
 
@@ -42,6 +49,8 @@ helloworld.Greeter.SayHello
 
 ## DIY
 
+### with grpctools
+
 1. proto 파일 수정
 
 2. server 코드 수정 (해당 메서드 호출시 어떤 응답을 할지)
@@ -51,6 +60,17 @@ helloworld.Greeter.SayHello
 4. 실행
 
 `$ grpcurl -plaintext localhost:7777 list helloworld.Greeter`
+
+### with buf
+
+1. proto 파일 수정
+
+2. `$ buf generate`
+
+3. 서버 코드 수정
+
+4. 실행
+
 
 ## Health Check
 
