@@ -10,9 +10,14 @@ gRPC 테스트
 
 ## proto to python files
 
+### with python grpc_tools
 example.
 
 `$ python3 -m grpc_tools.protoc -I ./proto --python_out=./test --pyi_out=./test --grpc_python_out=./test ./proto/helloworld.proto`
+
+### with buf (recommended)
+
+`$ buf generate`
 
 ## proto build (make proto descriptor)
 
